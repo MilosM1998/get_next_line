@@ -81,7 +81,6 @@ char	*get_next_line(int fd)
         if (readed == -1)
         {
             free(tmp_buff);
-            free(buffer);
             return (NULL);
         }
         if (readed == 0)
@@ -89,10 +88,16 @@ char	*get_next_line(int fd)
         tmp_buff[readed] = '\0';
         char *old = buffer;
         buffer = ft_strjoin(buffer, tmp_buff);
+        if (!buffer)
+        {
+            free(old);
+            free(tmp_buff);
+            return NULL;
+        }
         free(old);
     }
     free(tmp_buff);
-    if (buffer[0] == '\0')
+    if (!buffer || buffer[0] == '\0')
     {
         free(buffer);
         buffer = NULL;
