@@ -6,137 +6,112 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 19:40:49 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/05 11:49:56 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/06 13:29:30 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char *refresh_buff(char *buffer)
+char	*read_line(int fd, char *temp_buff)
 {
-    char    *new_buff;
-    int     i;
-    int     k;
+	char	*buff;
+	int		readed;
     
-    i = 0;
-    while (buffer[i] && buffer[i] != '\n')
-        i++;
-    if (!buffer[i])
+	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buff)
+		return (NULL);
+	readed = 1;
+    if (!temp_buff)
     {
-        free(buffer);
-        return (NULL);
+        temp_buff = ft_strdup("");
     }
-    new_buff = malloc(ft_strlen(buffer) - i + 1);
-    if (!new_buff)
-        return (NULL);
-    i++;
-    k = 0;
-    while(buffer[i])
-        new_buff[k++] = buffer[i++];
-    new_buff[k] = '\0';
-    free(buffer);
-    return (new_buff);
+	while (!ft_strchr(temp_buff, '\n') && readed != 0)
+	{
+		readed = read(fd, buff, BUFFER_SIZE);
+		if (readed == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+        if (readed == 0)
+        {
+            free(buff);
+            return (temp_buff); 
+        }
+		buff[readed] = '\0';
+		temp_buff = ft_strjoin(temp_buff, buff);
+	}
+	free(buff);
+	return (temp_buff);
 }
-
-static char *take_line(char *buffer)
+char	*find_line(char *temp_buff)
 {
-    char *new_line;
-    int i;
+	int		i;
+	char	*new_line;
 
-    i = 0;
-    while (buffer[i] && buffer[i] != '\n')
-        i++;
-    new_line = malloc(sizeof(char) * (i + 2));
-    if (!new_line)
-        return (NULL);
-    i = 0;
-    while (buffer[i] && buffer[i] != '\n')
-    {
-        new_line[i] = buffer[i];
-        i++;
-    }
-    if (buffer[i] == '\n')
-        new_line[i++] = '\n';
-    new_line[i] = '\0';
-    return (new_line);
+	i = 0;
+	if (!temp_buff)
+		return (NULL);
+	while (temp_buff[i] && temp_buff[i] != '\n')
+		i++;
+	new_line = malloc(sizeof(char) * (i + 2));
+	i = 0;
+	while (temp_buff[i] && temp_buff[i] != '\n')
+	{
+		new_line[i] = temp_buff[i];
+		i++;
+	}
+	if (temp_buff[i] == '\n')
+		new_line[i] = '\n';
+	new_line[i] = '\0';
+	return (new_line);
 }
-
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*temp_buff = NULL;
 	char		*line;
-    char        *tmp_buff;
-    int         readed;
     
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	tmp_buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!tmp_buff)
-		return (NULL);
-    if (!buffer)
-        buffer = ft_strdup("");
-    while (!ft_strchr(buffer, '\n'))
+    if (fd < 0 || BUFFER_SIZE <= 0)
+	    return (NULL);
+    temp_buff = read_line(fd, temp_buff);
+    if (!temp_buff)
     {
-        readed = read(fd, tmp_buff, BUFFER_SIZE);
-        if (readed == -1)
-        {
-            free(tmp_buff);
-            return (NULL);
-        }
-        if (readed == 0)
-            break;
-        tmp_buff[readed] = '\0';
-        char *old = buffer;
-        buffer = ft_strjoin(buffer, tmp_buff);
-        if (!buffer)
-        {
-            free(old);
-            free(tmp_buff);
-            return NULL;
-        }
-        free(old);
-    }
-    free(tmp_buff);
-    if (!buffer || buffer[0] == '\0')
-    {
-        free(buffer);
-        buffer = NULL;
+        free(temp_buff);
+        temp_buff = NULL; 
         return (NULL);
     }
-    line = take_line(buffer);
-    buffer = refresh_buff(buffer);
-    return (line);
+	line = find_line(temp_buff);
+	temp_buff = refresh_buff(temp_buff);
+	return (line);
 }
 
-#include <fcntl.h>    // Za funkciju open()
-#include <stdio.h>     // Za funkciju printf() i perror()
-#include <stdlib.h>    // Za funkciju exit()
-#include "get_next_line.h"  // Uključi svoj header za get_next_line
+#include <fcntl.h>    
+#include <stdio.h>     
+#include <stdlib.h>    
 
-int main(void)
+int	main(void)
 {
-    int     fd;
-    char    *line;
+	int		fd;
+	char	*line;
 
-    // Otvori fajl za testiranje (možeš zameniti putanju sa odgovarajućim fajlom)
-    fd = open("test.txt", O_RDONLY);
-    if (fd == -1)
-    {
-        printf("Error opening file\n");
-        return (1);
-    }
-
-    // Testiraj get_next_line funkciju
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        printf("%s", line);
-        free(line); // Oslobodi memoriju svake linije nakon što je pročitaš
-    }
-
-    // Zatvori fajl kada završiš
-    close(fd);
-    return (0);
+	// Otvori fajl za testiranje (možeš zameniti putanju sa odgovarajućim fajlom)
+	fd = open("test.txt", O_RDONLY);
+	if (fd == -1)
+	{
+		printf("Error opening file\n");
+		return (1);
+	}
+	// Testiraj get_next_line funkciju
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line); // Oslobodi memoriju svake linije nakon što je pročitaš
+	}
+	// Zatvori fajl kada završiš
+	close(fd);
+	return (0);
 }
 
 
 
+ 

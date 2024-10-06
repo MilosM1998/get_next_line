@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 17:56:08 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/05 11:30:28 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/06 12:53:10 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,13 @@
 size_t	ft_strlen(char const *str)
 {
 	size_t	i;
-	
+
 	i = 0;
 	while (str[i])
 		i++;
 	return (i);
 }
-char *ft_strjoin(char const *s1, char const *s2)
-{
-	int		i;
-	int		j;
-	char	*str;
 
-	i = 0;
-	j = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	str = malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!str)
-		return (NULL);
-	while (s1[i] != '\0')
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j] != '\0')
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	return (str);
-}
 char	*ft_strchr(const char *s, int c)
 {
 	unsigned char	uc;
@@ -63,6 +38,54 @@ char	*ft_strchr(const char *s, int c)
 	if (uc == '\0')
 		return ((char *)&s[i]);
 	return (0);
+}
+char	*ft_strjoin(char *s1, char *s2)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	j = 0;
+	if (!s1 || !s2)
+		return (NULL);
+	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j] != '\0')
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	return (str);
+}
+
+ char	*refresh_buff(char *temp_buff)
+{
+	char *new_buff;
+	int i;
+	int k;
+
+	i = 0;
+	while (temp_buff[i] && temp_buff[i] != '\n')
+		i++;
+	if (temp_buff[i] == '\n')
+		i++;
+	new_buff = malloc(sizeof(char) * (ft_strlen(temp_buff) - i + 1));
+	if (!new_buff)
+		return (NULL);
+	k = 0;
+	while (temp_buff[i])
+		new_buff[k++] = temp_buff[i++];
+	new_buff[k] = '\0';
+	free(temp_buff);
+	return (new_buff);
 }
 char	*ft_strdup(const char *s)
 {
