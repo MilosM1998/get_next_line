@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 17:56:08 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/06 12:53:10 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:21:36 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(char const *str)
 {
 	size_t	i;
 
+	if (!str)
+		return (0);
 	i = 0;
 	while (str[i])
 		i++;
@@ -39,6 +41,7 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)&s[i]);
 	return (0);
 }
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
@@ -66,27 +69,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
- char	*refresh_buff(char *temp_buff)
-{
-	char *new_buff;
-	int i;
-	int k;
-
-	i = 0;
-	while (temp_buff[i] && temp_buff[i] != '\n')
-		i++;
-	if (temp_buff[i] == '\n')
-		i++;
-	new_buff = malloc(sizeof(char) * (ft_strlen(temp_buff) - i + 1));
-	if (!new_buff)
-		return (NULL);
-	k = 0;
-	while (temp_buff[i])
-		new_buff[k++] = temp_buff[i++];
-	new_buff[k] = '\0';
-	free(temp_buff);
-	return (new_buff);
-}
 char	*ft_strdup(const char *s)
 {
 	char	*dup;
