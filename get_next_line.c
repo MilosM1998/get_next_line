@@ -31,10 +31,7 @@ static char	*read_line(int fd, char *buffer, char *buff, int readed)
 		buffer = ft_strjoin(buffer, buff);
 		free(temp);
 		if (!buffer)
-		{
-			free(buff);
 			return (NULL);
-		}
 	}
 	return (buffer);
 }
@@ -48,6 +45,7 @@ static char	*allocate_line(int fd, char *buffer)
 	if (!buff)
 	{
 		free(buffer);
+		buffer = NULL;
 		return (NULL);
 	}
 	readed = 1;
@@ -125,7 +123,7 @@ char	*get_next_line(int fd)
 	}
 	line = find_line(buffer);
 	buffer = refresh_buff(buffer);
-	if (buffer || *buffer == '\0')
+	if (!buffer || *buffer == '\0')
 	{
 		free(buffer);
 		buffer = NULL;
@@ -133,7 +131,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
- #include <fcntl.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 
