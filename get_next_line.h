@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 14:19:37 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/07 14:20:06 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/08 21:50:33 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ size_t	ft_strlen(char const *str);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);
+void	*free_all(char **buffer);
 
 #endif

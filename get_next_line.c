@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 19:40:49 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/08 19:28:25 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/08 21:50:17 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,36 +118,20 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	if (fd < 0 || BUFFER_SIZE <= 0)
-	{
-		free(buffer);
-		buffer = NULL;
-		return (NULL);
-	}
+		return (free_all(&buffer));
 	buffer = allocate_line(fd, buffer);
 	if (!buffer || *buffer == '\0')
-	{
-		if (buffer)
-			free(buffer);
-		buffer = NULL;
-		return (NULL);
-	}
+		return (free_all(&buffer));
 	line = find_line(buffer);
 	if (!line)
-	{
-		free(buffer);
-		buffer = NULL;
-		return (NULL);
-	}
+		return (free_all(&buffer));
 	buffer = refresh_buff(buffer);
 	if (!buffer || *buffer == '\0')
-	{
-		if (buffer)
-			free(buffer);
-		buffer = NULL;
-	}
+		(free_all(&buffer));
 	return (line);
 }
 
+/* 
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -170,5 +154,4 @@ int	main(void)
 	}
 	close(fd);
 	return (0);
-}
- 
+} */

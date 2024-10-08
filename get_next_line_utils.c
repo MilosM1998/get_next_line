@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 17:56:08 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/07 14:21:36 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/08 21:51:07 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,14 @@ char	*ft_strdup(const char *s)
 	}
 	dup[i] = '\0';
 	return (dup);
+}
+
+void	*free_all(char **buffer)
+{
+	if (*buffer)
+	{
+		free(*buffer);
+		*buffer = NULL;
+	}
+	return (NULL);
 }
