@@ -128,13 +128,14 @@ char	*get_next_line(int fd)
 	buffer = refresh_buff(buffer);
 	if (!buffer || *buffer == '\0')
 	{
-		free(buffer);
+		if (buffer)
+			free(buffer);
 		buffer = NULL;
 	}
 	return (line);
 }
 
-#include <fcntl.h>
+/* #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -157,4 +158,4 @@ int	main(void)
 	close(fd);
 	return (0);
 }
- 
+  */
