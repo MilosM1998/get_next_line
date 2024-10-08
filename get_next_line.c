@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 19:40:49 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/08 19:22:09 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:28:25 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,10 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	if (fd < 0 || BUFFER_SIZE <= 0)
+	{
+		free(buffer);
 		return (NULL);
+	}
 	buffer = allocate_line(fd, buffer);
 	if (!buffer || *buffer == '\0')
 	{
