@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 19:40:49 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/08 18:50:23 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:22:09 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ char	*refresh_buff(char *buffer)
 		i++;
 	new_buff = malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
 	if (!new_buff)
+	{
+		free(buffer);
 		return (NULL);
+	}
 	j = 0;
 	while (buffer[i])
 		new_buff[j++] = buffer[i++];
