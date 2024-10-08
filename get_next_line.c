@@ -64,7 +64,9 @@ static char	*find_line(char *buffer)
 		return (NULL);
 	while (buffer[i] != '\n' && buffer[i])
 		i++;
-	new_line = malloc(sizeof(char) * (i + 2));
+	if (buffer[i] == '\n')
+		i++;
+	new_line = malloc(sizeof(char) * (i + 1));
 	if (!new_line)
 		return (NULL);
 	i = 0;
@@ -118,16 +120,24 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
 		free(buffer);
+		buffer = NULL;
 		return (NULL);
 	}
 	buffer = allocate_line(fd, buffer);
 	if (!buffer || *buffer == '\0')
 	{
-		free(buffer);
+		if (buffer)
+			free(buffer);
 		buffer = NULL;
 		return (NULL);
 	}
 	line = find_line(buffer);
+	if (!line)
+	{
+		free(buffer);
+		buffer = NULL;
+		return (NULL);
+	}
 	buffer = refresh_buff(buffer);
 	if (!buffer || *buffer == '\0')
 	{
@@ -138,7 +148,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-/* #include <fcntl.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -161,4 +171,4 @@ int	main(void)
 	close(fd);
 	return (0);
 }
-  */
+ 
