@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 19:40:49 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/07 14:31:51 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:50:23 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ static char	*read_line(int fd, char *buffer, char *buff, int readed)
 	{
 		readed = read(fd, buff, BUFFER_SIZE);
 		if (readed == -1)
+		{
+			free(buffer);
 			return (NULL);
+		}
 		if (readed == 0)
 			break ;
 		buff[readed] = '\0';
@@ -43,7 +46,10 @@ static char	*allocate_line(int fd, char *buffer)
 
 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)
+	{
+		free(buffer);
 		return (NULL);
+	}
 	readed = 1;
 	buffer = read_line(fd, buffer, buff, readed);
 	free(buff);
@@ -103,7 +109,11 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (!buffer)
+	{
 		buffer = ft_strdup("");
+		if (!buffer)
+			return (NULL);
+	}
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = allocate_line(fd, buffer);
@@ -115,7 +125,7 @@ char	*get_next_line(int fd)
 	}
 	line = find_line(buffer);
 	buffer = refresh_buff(buffer);
-	if (buffer && *buffer == '\0')
+	if (buffer || *buffer == '\0')
 	{
 		free(buffer);
 		buffer = NULL;
@@ -123,7 +133,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-/* #include <fcntl.h>
+ #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -146,4 +156,4 @@ int	main(void)
 	close(fd);
 	return (0);
 }
- */
+ 
