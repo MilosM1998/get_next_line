@@ -6,7 +6,7 @@
 /*   By: mmilicev <mmilicev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 19:40:49 by mmilicev          #+#    #+#             */
-/*   Updated: 2024/10/08 21:50:17 by mmilicev         ###   ########.fr       */
+/*   Updated: 2024/10/09 19:22:22 by mmilicev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ static char	*read_line(int fd, char *buffer, char *buff, int readed)
 	{
 		readed = read(fd, buff, BUFFER_SIZE);
 		if (readed == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
+			return (free_all(&buffer));
 		if (readed == 0)
 			break ;
 		buff[readed] = '\0';
@@ -43,11 +40,7 @@ static char	*allocate_line(int fd, char *buffer)
 
 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)
-	{
-		free(buffer);
-		buffer = NULL;
-		return (NULL);
-	}
+		return (free_all(&buffer));
 	readed = 1;
 	buffer = read_line(fd, buffer, buff, readed);
 	free(buff);
@@ -94,10 +87,7 @@ char	*refresh_buff(char *buffer)
 		i++;
 	new_buff = malloc(sizeof(char) * (ft_strlen(buffer) - i + 1));
 	if (!new_buff)
-	{
-		free(buffer);
-		return (NULL);
-	}
+		return (free_all(&buffer));
 	j = 0;
 	while (buffer[i])
 		new_buff[j++] = buffer[i++];
@@ -131,7 +121,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-/* 
+/*
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
